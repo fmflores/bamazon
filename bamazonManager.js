@@ -5,7 +5,9 @@ async function init(){
   const list = await connection.query("SELECT * FROM products");
   console.table(list);
   const lowInv = list.filter(item => item.stock_quantity < 5);
-  let listUpated = {};
+  
+  //console.log(inventoryUpated)
+  
   //use list to display a table;
 
   const {menu} = await prompt({
@@ -29,25 +31,34 @@ async function init(){
             addToInv();
             break;
   }
-}
-
-function addToInv() {
-    const {quantity} = await prompt({
-        message: "How many would you like to add?",
-        name: "quantity",
-        validate: (input) => isNaN(input) ? 'Please input a number!' : Number(input)>listModified[buy]
+  async function addToInv() {
+    let inventoryUpdated = {};
+    list.forEach(item=> {
+     inventoryUpdated[item.product_name] = item.stock_quantity
+    })
+      //console.log(Object.keys(inventoryUpated));
+      //console.log(list);
+    const {item} = await prompt({
+        message: "Which item would you like to update inventory for?",
+        type: "list",
+        name: 'item',
+        choices:Object.keys(inventoryUpdated)
       })
-    
-     const result = await connection.query(`UPDATE products SET ? WHERE ?`, [{stock_quantity:listModified[buy]+quantity},{product_name:buy}])
-    
-     console.log(result)
+
+      switch(item) {
+          case "laptop": 
+          const {quantity} = await prompt({
+            message: "How many would you liked to add?",
+            name: "quantity",
+            validate: (input) => isNaN(input) ? 'Please input a number!' : Number(input)>inventoryUpdated[item] 
+          })
+        
+         const result = await connection.query(`UPDATE products SET ? WHERE ?`, [{stock_quantity:inventoryUpdated[item]+Number(quantity)},{product_name:item}])
+        
+         console.log(result)
+        }
+      }
     }
-    let updateInv = await connection.query("SELECT * FROM products");
-}
+
+
 init()
-// connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-//   if (error) throw error;
-//   console.log('The solution is: ', results[0].solution);
-// });
- 
-// connection.end();
