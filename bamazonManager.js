@@ -3,13 +3,9 @@ const {prompt} = require('inquirer');
 
 async function init(){
   const list = await connection.query("SELECT * FROM products");
-  console.table(list);
+  //console.table(list);
   const lowInv = list.filter(item => item.stock_quantity < 5);
   
-  //console.log(inventoryUpated)
-  
-  //use list to display a table;
-
   const {menu} = await prompt({
     message: "Hello manager what would you like to do?",
     type: "list",
@@ -36,8 +32,6 @@ async function init(){
     list.forEach(item=> {
      inventoryUpdated[item.product_name] = item.stock_quantity
     })
-      //console.log(Object.keys(inventoryUpated));
-      //console.log(list);
     const {item} = await prompt({
         message: "Which item would you like to update inventory for?",
         type: "list",

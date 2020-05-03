@@ -4,12 +4,12 @@ const {prompt} = require('inquirer');
 async function init(){
 
   const list = await connection.query("SELECT * FROM products");
-  console.log(list);
+  console.table(list);
   const listModified = {};
   list.forEach(item=> {
    listModified[item.product_name] = item.stock_quantity
   })
-  console.log(listModified)
+  //console.log(listModified)
   
   //use list to display a table;
 
