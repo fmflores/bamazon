@@ -41,10 +41,26 @@ async function init(){
 
       switch(item) {
           case "laptop": 
+            updateInvQuantity();
+            break;
+          case "monitor":
+            updateInvQuantity();
+            break;
+          case "tupperware":
+            updateInvQuantity();
+            break;
+          case "nalgene bottle":
+            updateInvQuantity();
+            break;
+          case "cups":
+            updateInvQuantity();
+            break;      
+        }
+        async function updateInvQuantity() {
           const {quantity} = await prompt({
             message: "How many would you liked to add?",
             name: "quantity",
-            validate: (input) => isNaN(input) ? 'Please input a number!' : Number(input)>inventoryUpdated[item] 
+            validate: (input) => isNaN(input) ? 'Please input a number!' : Number(input)>0 
           })
         
          const result = await connection.query(`UPDATE products SET ? WHERE ?`, [{stock_quantity:inventoryUpdated[item]+Number(quantity)},{product_name:item}])
